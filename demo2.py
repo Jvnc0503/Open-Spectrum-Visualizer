@@ -2,7 +2,6 @@ import numpy as np
 import sounddevice as sd
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
-from scipy.ndimage import gaussian_filter1d
 import matplotlib.ticker as ticker
 import threading
 
@@ -102,7 +101,7 @@ class RealTimeAnalyzer:
         # Etiquetas y Títulos
         self.ax.set_ylabel("Amplitude (dBFS)", color=COLOR_TEXT, fontsize=10)
         self.ax.set_xlabel("Frequency (Hz)", color=COLOR_TEXT, fontsize=10)
-        self.ax.set_title("REAL TIME ANALYZER | 1/3 OCT SMOOTHING", color='white', fontsize=12, pad=10, loc='left', fontweight='bold')
+        self.ax.set_title("REAL TIME ANALYZER | RAW SPECTRUM", color='white', fontsize=12, pad=10, loc='left', fontweight='bold')
         
         # Bordes limpios
         for spine in self.ax.spines.values():
@@ -176,25 +175,15 @@ class RealTimeAnalyzer:
 
             magnitude_db = magnitude_db - 10.0
 
-            smoothed_db = self.smooth_curve(magnitude_db, sigma=2)
-            smoothed_db = np.asarray(smoothed_db, dtype=np.float32)
+            spectrum_db = np.asarray(magnitude_db, dtype=np.float32)
 
             with self._audio_lock:
-                np.copyto(self._latest_db, smoothed_db)
+                np.copyto(self._latest_db, spectrum_db)
 
     def process_data(self):
         """Devuelve el último espectro ya calculado (la FFT corre en el hilo de fondo)."""
         with self._audio_lock:
             return self._latest_db.copy()
-
-    def smooth_curve(self, y_data, sigma=3):
-        """
-        Suavizado estilo RTA. 
-        Usamos filtro gaussiano como aproximación rápida al suavizado por octavas.
-        Para un suavizado de 1/3 octava real se requiere re-muestreo, 
-        pero esto visualmente funciona muy bien.
-        """
-        return gaussian_filter1d(y_data, sigma=sigma)
 
     def update(self, frame):
         """Función de actualización para la animación"""
