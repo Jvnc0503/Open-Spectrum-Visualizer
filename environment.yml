@@ -11,3 +11,5 @@ dependencies:
   - portaudio
   - ipykernel
   - pyaudio
+  - pyqtgraph
+  - PyQt6
