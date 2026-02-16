@@ -1,7 +1,16 @@
+import os
 import sys
 import numpy as np
 import scipy.signal
 import sounddevice as sd
+
+# Forzar que pyqtgraph use el mismo binding Qt que la app (PySide6)
+os.environ.setdefault("PYQTGRAPH_QT_LIB", "PySide6")
+# Evita warning/fallo en entornos donde el plugin wayland no está disponible
+if sys.platform.startswith("linux"):
+    current_qpa = os.environ.get("QT_QPA_PLATFORM", "").strip().lower()
+    if current_qpa in {"", "wayland"}:
+        os.environ["QT_QPA_PLATFORM"] = "xcb"
 import pyqtgraph as pg
 from PySide6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget, QLabel, QComboBox
 from PySide6.QtCore import QTimer, Qt
@@ -95,6 +104,7 @@ class SpectralAnalyzer:
 class RealTimeVisualizer(QMainWindow):
     def __init__(self):
         super().__init__()
+        self.stream = None
         
         # --- Configuración del Rango de Frecuencias ---
         self.MIN_FREQ = 100    # 100 Hz
@@ -189,8 +199,9 @@ class RealTimeVisualizer(QMainWindow):
         self.curve.setData(freqs_limited, spectrum_limited)
 
     def closeEvent(self, event):
-        self.stream.stop()
-        self.stream.close()
+        if self.stream is not None:
+            self.stream.stop()
+            self.stream.close()
         event.accept()
 
 if __name__ == "__main__":
