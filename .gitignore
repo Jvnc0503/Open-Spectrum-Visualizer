@@ -1,2 +1,7 @@
 .conda/
 __pycache__/
+__pycache__/
+venv/
+.env
+.DS_Store
+*.pyc
