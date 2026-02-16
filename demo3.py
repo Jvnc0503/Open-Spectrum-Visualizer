@@ -3,8 +3,8 @@ import numpy as np
 import scipy.signal
 import sounddevice as sd
 import pyqtgraph as pg
-from PyQt6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget, QLabel, QComboBox
-from PyQt6.QtCore import QTimer, Qt
+from PySide6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget, QLabel, QComboBox
+from PySide6.QtCore import QTimer, Qt
 
 # ==============================================================================
 # 1. MOTOR DE PROCESAMIENTO (Basado en Sección 8.2 del PDF)
