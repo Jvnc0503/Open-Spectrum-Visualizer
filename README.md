@@ -1,7 +1,7 @@
 ## License
 
 This project is licensed under the **Blue Oak Model License 1.0.0**.
-Please see the [LICENSE](LICENSE) file for the full text.
+Please see the [LICENSE](LICENSE.md) file for the full text.
 
 ## Third-Party Dependencies & Legal Notices
 
